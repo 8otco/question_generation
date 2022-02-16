@@ -137,7 +137,10 @@ class QGPipeline:
                 sent = sents[i]
                 sents_copy = sents[:]
                 
-                answer_text = answer_text.strip()
+                answer_text = answer_text.replace('<pad>', '').strip()
+
+                if answer_text not in sent:
+                    continue
                 
                 ans_start_idx = sent.index(answer_text)
                 
@@ -146,8 +149,7 @@ class QGPipeline:
                 
                 source_text = " ".join(sents_copy)
                 source_text = f"generate question: {source_text}" 
-                if self.model_type == "t5":
-                    source_text = source_text + " </s>"
+                source_text = source_text + " </s>"
                 
                 inputs.append({"answer": answer_text, "source_text": source_text})
         
